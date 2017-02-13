@@ -3,8 +3,7 @@
 #include "AppFactory.h"
 #include "ModulesApp.h"
 #include "MooseSyntax.h"
-//#include "TestControl.h"
-//#include "FunctionControl.h"
+#include "PythonControl.h"
 #include "CoefDiffusionTwo.h"
 #include "DirichletBCTwo.h"
 #include "TimePostprocessor.h"
@@ -56,8 +55,7 @@ PythonControlApp::registerObjects(Factory & factory)
 
   registerPostprocessor(TimePostprocessor);
 
-  //registerControl(TestControl);
-  //registerControl(FunctionControl);
+  registerControl(PythonControl);
 }
 
 // External entry point for dynamic syntax association
