@@ -20,7 +20,7 @@ public:
 private:
   std::vector<std::string> controlled_vars;
   std::vector<std::string> postprocessor_vars;
-  PyObject * pModule, * pFunction;
+  PyObject * _python_module, * _function;
 };
 
 #endif /* PYTHONCONTROL_H */

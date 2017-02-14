@@ -56,15 +56,21 @@ PythonControl::PythonControl(const InputParameters & parameters) :
 
   pName = PyUnicode_FromString(control_module.c_str());
 
-  pModule = PyImport_Import(pName);
+  _python_module = PyImport_Import(pName);
 
-  if (pModule != NULL) {
+  if (_python_module != NULL) {
     fprintf(stderr, "Loaded \"%s\"\n", control_module.c_str());
   } else {
     PyErr_Print();
-    fprintf(stderr, "Failed to load \"%s\"\n", control_module.c_str());
+    mooseError("Failed to load " << control_module);
   }
   //Get function in python module
+  _function = PyObject_GetAttrString(_python_module, "execute");
+  if (!_function || !PyCallable_Check(_function)) {
+    if (PyErr_Occurred())
+      PyErr_Print();
+    mooseError("Cannot find function 'execute' in "<< control_module);
+  }
 }
 
 void
