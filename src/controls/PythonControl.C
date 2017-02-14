@@ -100,8 +100,17 @@ PythonControl::execute()
   PyTuple_SetItem(args, 0, controlled_dict);
   PyTuple_SetItem(args, 1, postprocessor_dict);
   PyObject * ret = PyObject_CallObject(_function, args);
-  Py_DECREF(args);
   if (ret == NULL)
     PyErr_Print();
+
   //Get all controlled vars and put them back in
+  for (const std::string controlled : _controlled_vars)
+  {
+    PyObject * value = PyDict_GetItemString(controlled_dict, controlled.c_str());
+    assert(PyNumber_Float(value) != NULL);
+    setControllableValueByName<Real>(controlled, PyFloat_AsDouble(value));
+  }
+  Py_DECREF(args);
+  Py_DECREF(postprocessor_dict);
+  Py_DECREF(controlled_dict);
 }
