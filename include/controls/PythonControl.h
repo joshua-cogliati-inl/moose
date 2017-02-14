@@ -2,6 +2,7 @@
 #define PYTHONCONTROL_H
 
 #include "Control.h"
+#include <Python.h>
 
 class PythonControl;
 
@@ -19,7 +20,7 @@ public:
 private:
   std::vector<std::string> controlled_vars;
   std::vector<std::string> postprocessor_vars;
-  
+  PyObject * pModule, * pFunction;
 };
 
 #endif /* PYTHONCONTROL_H */
