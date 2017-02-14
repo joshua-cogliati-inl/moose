@@ -39,7 +39,7 @@ PythonControl::PythonControl(const InputParameters & parameters) :
   python_path.copy(c_path, python_path.size());
   c_path[python_path.size()] = '\0';
   putenv(c_path);
-  Moose::out << "Creating PYTHONPATH " << c_path << std::endl;
+  //Moose::out << "Creating PYTHONPATH " << c_path << std::endl;
 
   //Get python module
   Py_Initialize();
@@ -49,22 +49,18 @@ PythonControl::PythonControl(const InputParameters & parameters) :
   if (len > 3 && control_module.substr(len - 3, 3) == ".py")
     control_module = control_module.substr(0, len - 3);
 
-  //std::string control_path = path + "/" + control_module + ".py";
-  //MooseUtils::checkFileReadable(control_path);
+  PyObject *python_name;
 
-  PyObject *pName;
+  python_name = PyUnicode_FromString(control_module.c_str());
 
-  pName = PyUnicode_FromString(control_module.c_str());
+  _python_module = PyImport_Import(python_name);
+  Py_DECREF(python_name);
 
-  _python_module = PyImport_Import(pName);
-  Py_DECREF(pName);
-
-  if (_python_module != NULL) {
-    fprintf(stderr, "Loaded \"%s\"\n", control_module.c_str());
-  } else {
+  if (_python_module == NULL) {
     PyErr_Print();
     mooseError("Failed to load " << control_module);
   }
+
   //Get function in python module
   _function = PyObject_GetAttrString(_python_module, "execute");
   if (!_function || !PyCallable_Check(_function)) {
