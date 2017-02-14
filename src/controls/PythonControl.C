@@ -14,8 +14,8 @@ InputParameters validParams<PythonControl>()
 PythonControl::PythonControl(const InputParameters & parameters) :
     Control(parameters)
 {
-  MooseUtils::tokenize(getParam<std::string>("controlled_vars"), controlled_vars, 1, " ");
-  MooseUtils::tokenize(getParam<std::string>("postprocessor_vars"), postprocessor_vars, 1, " ");
+  MooseUtils::tokenize(getParam<std::string>("controlled_vars"), _controlled_vars, 1, " ");
+  MooseUtils::tokenize(getParam<std::string>("postprocessor_vars"), _postprocessor_vars, 1, " ");
 
   //get input file path
   std::string filename = _app.getFileName(false);
@@ -57,6 +57,7 @@ PythonControl::PythonControl(const InputParameters & parameters) :
   pName = PyUnicode_FromString(control_module.c_str());
 
   _python_module = PyImport_Import(pName);
+  Py_DECREF(pName);
 
   if (_python_module != NULL) {
     fprintf(stderr, "Loaded \"%s\"\n", control_module.c_str());
@@ -77,7 +78,30 @@ void
 PythonControl::execute()
 {
   //Convert postprocessors to python
+  PyObject * postprocessor_dict = Py_BuildValue("{}");
+  for (const std::string postprocessor : _postprocessor_vars)
+  {
+    PyObject * value = PyFloat_FromDouble(getPostprocessorValueByName(postprocessor));
+    PyDict_SetItemString(postprocessor_dict, postprocessor.c_str(), value);
+    Py_DECREF(value);
+  }
+
   //Convert controlled vars to python
+  PyObject * controlled_dict = Py_BuildValue("{}");
+  for (const std::string controlled : _controlled_vars)
+  {
+    PyObject * value = PyFloat_FromDouble(getControllableValueByName<Real>(controlled));
+    PyDict_SetItemString(controlled_dict, controlled.c_str(), value);
+    Py_DECREF(value);
+  }
+
   //call python function
+  PyObject * args = PyTuple_New(2);
+  PyTuple_SetItem(args, 0, controlled_dict);
+  PyTuple_SetItem(args, 1, postprocessor_dict);
+  PyObject * ret = PyObject_CallObject(_function, args);
+  Py_DECREF(args);
+  if (ret == NULL)
+    PyErr_Print();
   //Get all controlled vars and put them back in
 }

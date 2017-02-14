@@ -18,8 +18,8 @@ public:
   virtual void execute() override;
 
 private:
-  std::vector<std::string> controlled_vars;
-  std::vector<std::string> postprocessor_vars;
+  std::vector<std::string> _controlled_vars;
+  std::vector<std::string> _postprocessor_vars;
   PyObject * _python_module, * _function;
 };
 

@@ -1,3 +1,4 @@
 
-def execute():
-  print("Hello, World!")
+def execute(controlled, postprocessor):
+  print("Hello, World!", controlled, postprocessor)
+
