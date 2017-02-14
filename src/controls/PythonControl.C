@@ -27,6 +27,8 @@ PythonControl::PythonControl(const InputParameters & parameters) :
     path = ".";
 
   //Add to to python path
+  //Note that adding to the Python Path should probably be done in the
+  // app, not in PythonControl that might have more than one copy.
   std::string python_path = std::string("PYTHONPATH=");
   python_path.append(path);
   if (getenv("PYTHONPATH") != NULL)
