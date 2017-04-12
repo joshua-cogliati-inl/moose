@@ -60,7 +60,7 @@ PythonControl::PythonControl(const InputParameters & parameters) :
 
   if (_python_module == NULL) {
     PyErr_Print();
-    mooseError("Failed to load " << control_module);
+    mooseError("Failed to load " + control_module);
   }
 
   //Get function in python module
@@ -68,7 +68,7 @@ PythonControl::PythonControl(const InputParameters & parameters) :
   if (!_function || !PyCallable_Check(_function)) {
     if (PyErr_Occurred())
       PyErr_Print();
-    mooseError("Cannot find function 'execute' in "<< control_module);
+    mooseError("Cannot find function 'execute' in " + control_module);
   }
 }
 
