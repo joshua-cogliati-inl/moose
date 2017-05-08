@@ -7,6 +7,7 @@
 #include "CoefDiffusionTwo.h"
 #include "DirichletBCTwo.h"
 #include "TimePostprocessor.h"
+#include "TriggerTransient.h"
 
 template<>
 InputParameters validParams<PythonControlApp>()
@@ -56,6 +57,8 @@ PythonControlApp::registerObjects(Factory & factory)
   registerPostprocessor(TimePostprocessor);
 
   registerControl(PythonControl);
+
+  registerExecutioner(TriggerTransient);
 }
 
 // External entry point for dynamic syntax association

@@ -68,8 +68,21 @@ PythonControl::PythonControl(const InputParameters & parameters) :
   if (!_function || !PyCallable_Check(_function)) {
     if (PyErr_Occurred())
       PyErr_Print();
-    mooseError("Cannot find function 'execute' in " + control_module);
+    //mooseError("Cannot find function 'execute' in " + control_module);
+    _function = NULL;
   }
+
+  //Get keep going in python module
+  _keep_going_function = PyObject_GetAttrString(_python_module, "keep_going");
+  if (!_keep_going_function || !PyCallable_Check(_keep_going_function)) {
+    if (PyErr_Occurred())
+      PyErr_Print();
+    _keep_going_function = NULL;
+    //mooseError("Cannot find function 'execute' in " + control_module);
+  }
+
+  if (!_function && !_keep_going_function)
+    mooseError("Cannot find function 'execute' or 'keep_going' in" + control_module);
 }
 
 void
@@ -93,13 +106,25 @@ PythonControl::execute()
     Py_DECREF(value);
   }
 
-  //call python function
   PyObject * args = PyTuple_New(2);
   PyTuple_SetItem(args, 0, controlled_dict);
   PyTuple_SetItem(args, 1, postprocessor_dict);
-  PyObject * ret = PyObject_CallObject(_function, args);
-  if (ret == NULL)
-    PyErr_Print();
+
+  //call python execute function
+  if (_function) {
+    PyObject * ret = PyObject_CallObject(_function, args);
+    if (ret == NULL)
+      PyErr_Print();
+  }
+
+  //call python keep_going function
+  if (_keep_going_function) {
+    PyObject * ret = PyObject_CallObject(_keep_going_function, args);
+    if (ret == NULL)
+      PyErr_Print();
+    if (PyBool_Check(ret) && ret == Py_False)
+      stopGoing();
+  }
 
   //Get all controlled vars and put them back in
   for (const std::string controlled : _controlled_vars)
@@ -112,3 +137,17 @@ PythonControl::execute()
   Py_DECREF(postprocessor_dict);
   Py_DECREF(controlled_dict);
 }
+
+bool
+PythonControl::keepGoing()
+{
+  return _keep_going;
+}
+
+void
+PythonControl::stopGoing()
+{
+  _keep_going = false;
+}
+
+bool PythonControl::_keep_going = true;
