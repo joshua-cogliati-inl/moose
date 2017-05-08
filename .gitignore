@@ -144,3 +144,5 @@ out.xyz
 
 python_control-*
 lib/
+
+.failed_tests
