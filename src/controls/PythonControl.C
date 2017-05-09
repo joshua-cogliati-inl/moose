@@ -64,12 +64,12 @@ PythonControl::PythonControl(const InputParameters & parameters) :
   }
 
   //Get function in python module
-  _function = PyObject_GetAttrString(_python_module, "execute");
-  if (!_function || !PyCallable_Check(_function)) {
+  _execute_function = PyObject_GetAttrString(_python_module, "execute");
+  if (!_execute_function || !PyCallable_Check(_execute_function)) {
     if (PyErr_Occurred())
       PyErr_Print();
     //mooseError("Cannot find function 'execute' in " + control_module);
-    _function = NULL;
+    _execute_function = NULL;
   }
 
   //Get keep going in python module
@@ -81,7 +81,7 @@ PythonControl::PythonControl(const InputParameters & parameters) :
     //mooseError("Cannot find function 'execute' in " + control_module);
   }
 
-  if (!_function && !_keep_going_function)
+  if (!_execute_function && !_keep_going_function)
     mooseError("Cannot find function 'execute' or 'keep_going' in" + control_module);
 }
 
@@ -111,8 +111,8 @@ PythonControl::execute()
   PyTuple_SetItem(args, 1, postprocessor_dict);
 
   //call python execute function
-  if (_function) {
-    PyObject * ret = PyObject_CallObject(_function, args);
+  if (_execute_function) {
+    PyObject * ret = PyObject_CallObject(_execute_function, args);
     if (ret == NULL)
       PyErr_Print();
   }

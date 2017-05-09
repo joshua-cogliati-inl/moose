@@ -22,16 +22,25 @@ class CoefDiffusionTwo;
 template<>
 InputParameters validParams<CoefDiffusionTwo>();
 
+/**
+ * A CoefDiffusion kernel with a controllable coef.
+ */
 class CoefDiffusionTwo : public Kernel
 {
 public:
 
+  /**
+   * Constructor
+   *
+   * @param parameters The parameters object with the controllable coef.
+   */
   CoefDiffusionTwo(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
 
+  /// declared as a reference so it can be controlled.
   const Real & _coef;
 };
 

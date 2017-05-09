@@ -8,6 +8,9 @@ class PythonControlApp;
 template<>
 InputParameters validParams<PythonControlApp>();
 
+/**
+ * A class to demostrate using PythonControl and TriggerTransient
+ */
 class PythonControlApp : public MooseApp
 {
 public:
