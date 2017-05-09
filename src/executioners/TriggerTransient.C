@@ -14,10 +14,6 @@ TriggerTransient::TriggerTransient(const InputParameters & params) :
 {
 }
 
-TriggerTransient::~TriggerTransient()
-{
-}
-
 bool
 TriggerTransient::keepGoing()
 {

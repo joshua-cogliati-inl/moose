@@ -15,7 +15,6 @@ class PythonControlApp : public MooseApp
 {
 public:
   PythonControlApp(InputParameters parameters);
-  virtual ~PythonControlApp();
 
   static void registerApps();
   static void registerObjects(Factory & factory);

@@ -13,10 +13,6 @@ TimePostprocessor::TimePostprocessor(const InputParameters & parameters) :
 {
 }
 
-TimePostprocessor::~TimePostprocessor()
-{
-}
-
 void
 TimePostprocessor::initialize()
 {

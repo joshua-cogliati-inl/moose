@@ -33,10 +33,6 @@ PythonControlApp::PythonControlApp(InputParameters parameters) :
   PythonControlApp::associateSyntax(_syntax, _action_factory);
 }
 
-PythonControlApp::~PythonControlApp()
-{
-}
-
 // External entry point for dynamic application loading
 extern "C" void PythonControlApp__registerApps() { PythonControlApp::registerApps(); }
 void

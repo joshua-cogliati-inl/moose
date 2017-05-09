@@ -21,16 +21,15 @@ public:
    */
   TimePostprocessor(const InputParameters & parameters);
 
-  virtual ~TimePostprocessor();
-  virtual void initialize();
-  virtual void execute();
+  virtual void initialize() override;
+  virtual void execute() override;
 
   /**
    * Gets the current time _t
    *
    * @return The current time.
    */
-  virtual Real getValue();
+  virtual Real getValue() override;
 
 };
 

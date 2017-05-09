@@ -22,8 +22,6 @@ public:
    */
   TriggerTransient(const InputParameters & params);
 
-  virtual ~TriggerTransient();
-
   /**
    * This returns if the simulation should keep going. It will stop for
    * all the reasons Transient will stop, as well as if PythonControl

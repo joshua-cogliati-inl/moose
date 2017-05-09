@@ -37,8 +37,8 @@ public:
   CoefDiffusionTwo(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
+  virtual Real computeQpResidual() override;
+  virtual Real computeQpJacobian() override;
 
   /// declared as a reference so it can be controlled.
   const Real & _coef;
