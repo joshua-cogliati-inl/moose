@@ -1,7 +1,6 @@
 #include "PythonControlApp.h"
 #include "Moose.h"
 #include "AppFactory.h"
-#include "ModulesApp.h"
 #include "MooseSyntax.h"
 #include "PythonControl.h"
 #include "CoefDiffusionTwo.h"
@@ -25,11 +24,9 @@ PythonControlApp::PythonControlApp(InputParameters parameters) :
     MooseApp(parameters)
 {
   Moose::registerObjects(_factory);
-  ModulesApp::registerObjects(_factory);
   PythonControlApp::registerObjects(_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
-  ModulesApp::associateSyntax(_syntax, _action_factory);
   PythonControlApp::associateSyntax(_syntax, _action_factory);
 }
 
